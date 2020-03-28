@@ -6,11 +6,34 @@ function unpack(rows, index) {
 };
 
 function filterRecords(records,id){
-    return records.id === id;
+    return records.filter(record => +record.id === id);
     console.log(records.id === id);
 }
 
 
+function getTopTen(focusSample){
+    var otuIds = focusSample[0].otu_ids;
+    var sampleVals = focusSample[0].sample_values;
+    var otuLabels = focusSample[0].otu_labels;
+     //console.log(otuIds);
+
+     // make an array of objects so we can sort by sample values in desc order 
+     // and get the top 10 objects
+     var idResults = [];
+     otuIds.forEach(function (id,i){ 
+        var newObj = {};
+        newObj.otu_id = id;
+        newObj.sample_value = sampleVals[i];
+        newObj.otu_label = otuLabels[i];
+        idResults.push(newObj);
+    });
+
+    // Sort the objects by sample_value and then slice the top ten
+    var sortedById = idResults.sort((a,b) => b.sample_value - a.sample_value);
+    var slicedTopTen = sortedById.slice(0,10);
+    //var reversedTopTen = slicedTopTen.reverse();
+    return slicedTopTen;
+}
 // Using D3 read in the samples.json file
 d3.json("data/samples.json").then((sampleData) => {
     
@@ -24,25 +47,13 @@ d3.json("data/samples.json").then((sampleData) => {
     // console.log(metadata);
     // console.log(samples);
     buildDropdown(names);
-    var initSample = samples.filter(record => record.id ==='940');
-    var initMetadata = metadata.filter(record => +record.id === 940);
-    console.log(initSample);
-    // console.log(`initSample: ${initSample.id}`);
-    var initOtuIds = initSample[0].otu_ids;
-    var initSampleVals = initSample[0].sample_values;
-    var initOtuLabels = initSample[0].otu_labels;
-     console.log(initOtuIds);
-
-     // make an array of objects so we can sort by sample values in desc order and get the top 10
-     var idResults = [];
-     initOtuIds.forEach(function (id,i){ 
-        var newObj = {};
-        newObj.otu_id = id;
-        newObj.sample_value = initSampleVals[i];
-        newObj.otu_label = initOtuLabels[i];
-        idResults.push(newObj);
-     });
-     console.log(idResults);
+    //var initSample = samples.filter(record => record.id ==='940');
+    var initSample = filterRecords(samples,940);
+    var initMetadata = filterRecords(metadata,940);
+    console.log(initMetadata);
+        
+    var topTenSamples = getTopTen(initSample,initMetadata);
+    console.log(topTenSamples);
 });
 
 
