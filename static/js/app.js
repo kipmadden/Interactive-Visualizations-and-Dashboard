@@ -1,10 +1,4 @@
-// Create a function to unpack an array of objects
-function unpack(rows, index) {
-    return rows.map(function(row) {
-      return row[index];
-    });
-};
-
+// Create a function to populate and build the dropdown options
 function buildDropdown(ids){
     var selectDropdown = d3.select("#selDataset");
     for (var i = 0; i <ids.length; i++){
@@ -13,15 +7,24 @@ function buildDropdown(ids){
 
 };
 
+// Function to filter the records using a single id value that
+// is passed from the dropdown seletion
 function filterRecords(records,id){
     return records.filter(record => +record.id === +id);
     console.log(records.id === id);
 }
 
-
+// Function that takes the array of sample objects and selects the one 
+// object using the passed id value, then it gets the sample_values array, otu_id array
+// and otu_labels array and then creates a new array of objects holding all three key values
+// so it can be sorted in descending order and then the top 10 objects are sliced.
+// These are the used to plot a horizontal bar chart
 function plotTopTen(samples,id){
+    // Use the passed id to filter the array of Sample objects from the dataset
     var focusSample = filterRecords(samples,id);
     //console.log(focusSample);
+    // Grab all the values from the arrays associated with the individuals id and
+    // put them into arrays
     var otuIds = focusSample[0].otu_ids;
     var sampleVals = focusSample[0].sample_values;
     var otuLabels = focusSample[0].otu_labels;
@@ -58,7 +61,7 @@ function plotTopTen(samples,id){
         orientation: "h"
     };
 
-    // data
+    // data to be used for the plot
     var chartData = [trace1];
 
     // Apply the group bar mode to the layout
@@ -76,38 +79,51 @@ function plotTopTen(samples,id){
         }
     };
 
-    // Render the plot to the div tag with id "plot"
+    // Render the plot to the div tag with id "bar-plot"
     Plotly.newPlot("bar-plot", chartData, layout);
     return reversedTopTen;
 }
 
+// Function to get the metadata object using a passed id value and the 
+// array of all metadata objects
 function buildDemoData(metadata,id){
+    // Use the passed id to filter the array of metadata objects from the dataset
     var focusMetaData = filterRecords(metadata,id);
     //console.log(focusMetaData);
+
+    // Select the sample-metadata div and clear the html so any
+    // prior <h6> elements are removed
     var selectMetaID = d3.select("#sample-metadata").html("");
     
+    // iterate through the metadata object and create an <h6> html element
+    // for each key:value pair
     for(let [key, value] of Object.entries(focusMetaData[0])){
         //console.log(`${key}: ${value}`);
         selectMetaID.append("h6").text(`${key}: ${value}`);
     }
-    // for (var i = 0; i <ids.length; i++){
-    //     ;
-    // }
+
     return focusMetaData;
 };
 
+// Function to take a passed id value and get all the sampledata values
+// and use them to plot a bubble chart of all samples
 function plotBubbleChart(samples,id){
+    // Use the passed id to filter the array of Sample objects from the dataset
     var focusSample = filterRecords(samples,id);
     //console.log(focusSample);
+
+    // Grab all the values from the arrays associated with the individuals id and
+    // put them into arrays
     var otuIds = focusSample[0].otu_ids;
     var sampleVals = focusSample[0].sample_values;
     var otuLabels = focusSample[0].otu_labels;
     //console.log(otuIds);
 
-  
+    // Add scaling to the bubble sizes so they all display in the bubble chart
+    // Set the maximum marker size to 100
      var desired_max_marker_size = 100;
      var size = sampleVals;
-      // Trace1 for the Top Ten Data
+      // Trace1 for all the sample_values, otu_ids and otu_labels
     var trace1 = {
 
         x: otuIds,
@@ -124,10 +140,10 @@ function plotBubbleChart(samples,id){
         }
     };
 
-    // data
+    // data to be used for the plot
     var chartData = [trace1];
 
-    // Apply the group bar mode to the layout
+    // Apply the group bubble chart layout options including hoverlabel coloring
     var layout = {
         title: `id: ${id} Bacteria Bubble Chart`,
         xaxis: {
@@ -147,17 +163,22 @@ function plotBubbleChart(samples,id){
         }
     };
 
-    // Render the plot to the div tag with id "plot"
+    // Render the plot to the div tag with id "bubble"
     Plotly.newPlot("bubble", chartData, layout);
-    // return reversedTopTen;
 }
 
+// Bonus section of the assignment
+// A gauge chart is added to indicate the number of scrubs per week
 function plotGaugeChart(metadata,id){
+    // Use the passed id to filter the array of Sample objects from the dataset
     var focusMetaData = filterRecords(metadata,id);
-    console.log(focusMetaData);
-    var wFreq = parseFloat(focusMetaData[0].wfreq);
-    console.log(`wFreq: ${wFreq}`);
+    //console.log(focusMetaData);
 
+    // the washing frequency is parsed from the object
+    var wFreq = parseFloat(focusMetaData[0].wfreq);
+    //console.log(`wFreq: ${wFreq}`);
+
+    // the data for the gauge chart (indicator) is created
     var data = [
         {
           type: "indicator",
@@ -195,8 +216,13 @@ function plotGaugeChart(metadata,id){
         font: { color: "darkblue", family: "Arial" }
       };
       
+      // Render the plot to the div tag with id "gauge"
       Plotly.newPlot('gauge', data, layout);
 }
+
+// Create empty arrays to accept the values parsed from the json file
+// This is done because the variables are scoped to the d3.json function
+// and they must be available to the entire  script
 var metadataObj = [];
 var samplesObj = [];
 
@@ -205,36 +231,51 @@ d3.json("data/samples.json").then((sampleData) => {
     
     var data = sampleData;
     //console.log(data);
+
+    // Create an array of names
     var names = data.names;
     //console.log(names);
+
+    // Create an array of objects and push it to the globally available variables
     var metadata = data.metadata;
     metadata.forEach(obj => metadataObj.push(obj));
-     console.log(metadata.map(val => val.wfreq));
+     //console.log(metadata.map(val => val.wfreq));
 
+    // Create an array of objects and push it to the globally available variables
     var samples = data.samples;
     samples.forEach(obj => samplesObj.push(obj));
     //console.log(samplesObj);
     //console.log(metadata);
     // console.log(samples);
+
+    // Call the buildDropdown function to initialize the dropdown list 
+    // with values parsed from the json file above
     buildDropdown(names);
    
-        
+    // Call the plotTopTen function to initialize the top ten horizontal bar chart 
+    // with values parsed from the json file above using an arbitrary id of 940   
     plotTopTen(samples,940);
     //console.log(initTopTenSamples);
+
+    // Call the buildDemoData function to initialize the Demographic Info 
+    // with values parsed from the json file above using an arbitrary id of 940 
     buildDemoData(metadata,940);
 
+    // Call the plotBubbleChart function to initialize the bubble chart 
+    // with values parsed from the json file above using an arbitrary id of 940 
     plotBubbleChart(samples,940);
     //console.log(initMetadata);
 
+     // Call the plotGaugeChart function to initialize the gauge chart 
+    // with values parsed from the json file above using an arbitrary id of 940 
     plotGaugeChart(metadata,940);
 });
 //console.log(metadataObj);
 //console.log(samplesObj);
-// d3.selectAll("#selDataset").on("change", 
-// console.log(this.value),
-// buildDemoData(metadataObj,this.value),
-// plotTopTen(samplesObj,this.value));
 
+// Function that is called when a new value is selected in the index.html file for
+// the select with id=selDataset 
+// This function refreshes the html page with new values chosen from the dropdown
 function optionChanged(id){
     console.log(id),
     buildDemoData(metadataObj,id),
