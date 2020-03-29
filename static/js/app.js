@@ -158,52 +158,44 @@ function plotGaugeChart(metadata,id){
     var wFreq = parseFloat(focusMetaData[0].wfreq);
     console.log(`wFreq: ${wFreq}`);
 
-    // part of data to input
-    var trace1 = {
-        type: 'pie',
-        showlegend: false,
-        hole: 0.4,
-        rotation: 90,
-        values: [ 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81],
-        text: ['0-1','1-2','2-3','3-4','4-5','5-6','6-7','7-8','8-9'],
-        direction: 'clockwise',
-        textinfo: 'text',
-        textposition: 'inside',
-        marker: {
-          colors: ['','','','','','','','','','white'],
-          labels: ['0-1','1-2','2-3','3-4','4-5','5-6','6-7','7-8','8-9'],
-          hoverinfo: 'label'
-        }
-      }
-  
-      // needle
-      var degrees = 50, radius = .9
-      var radians = degrees * Math.PI / 180
-      var x = -1 * radius * Math.cos(radians) * wFreq
-      var y = radius * Math.sin(radians)
-  
-      var layout = {
-        shapes: [{
-          type: 'line',
-          x0: 0.5,
-          y0: 0.5,
-          x1: 0.6,
-          y1: 0.6,
-          line: {
-            color: 'black',
-            width: 4
+    var data = [
+        {
+          type: "indicator",
+          mode: "gauge+number",
+          value: wFreq,
+          title: { text: "<b>Belly Button Washing Frequency</b> <br> Scrubs per Week", font: { size: 24 } },
+          // delta: { reference: 400, increasing: { color: "RebeccaPurple" } },
+          gauge: {
+            axis: { range: [null, 10], tickwidth: 2, tickcolor: "darkblue" },
+            bar: { color: "darkblue" },
+            bgcolor: "white",
+            borderwidth: 2,
+            bordercolor: "gray",
+            steps: [
+              { range: [0, 1], color: "lightseagreen" },
+              { range: [1, 2], color: "mediumspringgreen" },
+              { range: [2, 3], color: "lightgreen" },
+              { range: [3, 4], color: "yellowgreen" },
+              { range: [4, 5], color: "darkseagreen" },
+              { range: [5, 6], color: "mediumseagreen" },
+              { range: [6, 7], color: "seagreen" },
+              { range: [7, 8], color: "forestgreen" },
+              { range: [8, 9], color: "green" },
+              { range: [9, 10], color: "darkgreen" },
+            ]
           }
-        }],
-        height: 600,
-        width: 600,
-        title: '<b>Belly Button Washing Frequency</b> <br> Scrubs per Week',
-        xaxis: {visible: false, range: [-1, 1]},
-        yaxis: {visible: false, range: [-1, 1]}
-      }
-  
-      var data = [trace1]
-  
-      Plotly.plot('gauge', data, layout)
+        }
+      ];
+      
+      var layout = {
+        width: 500,
+        height: 400,
+        margin: { t: 25, r: 25, l: 25, b: 25 },
+        paper_bgcolor: "white",
+        font: { color: "darkblue", family: "Arial" }
+      };
+      
+      Plotly.newPlot('gauge', data, layout);
 }
 var metadataObj = [];
 var samplesObj = [];
