@@ -1,7 +1,5 @@
 # Interactive-Visualizations-and-Dashboard
 SMU Data Science Bootcamp D3 Javascript Visualization Homework
-# Interactive-Visualizations-and-Dashboard
-SMU Data Science Bootcamp D3 Javascript Visualization Homework
 # Plot.ly Homework - Belly Button Biodiversity
 
 ![Bacteria by filterforge.com](Images/bacteria.jpg)
