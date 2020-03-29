@@ -50,6 +50,10 @@ function plotTopTen(samples,id){
         y: reversedTopTen.map(row => `OTU ${row.otu_id}`),
         text: reversedTopTen.map(row => row.otu_label),
         name: `id: ${id}`,
+        marker:{
+            'color': reversedTopTen.map(row => row.otu_id),
+            'colorscale': 'Portland'
+        },
         type: "bar",
         orientation: "h"
     };
@@ -112,7 +116,8 @@ function plotBubbleChart(samples,id){
         name: `id: ${id}`,
         mode: 'markers',
         marker: {
-            color: otuIds.map(val => `'rgb(${val/150},${val/20},${val})'`),
+            color: otuIds,
+            colorscale: "Portland",
             size: size,
             sizeref: 2.0* Math.max(...size) / (desired_max_marker_size**2),
             sizemode: 'area'
@@ -147,6 +152,59 @@ function plotBubbleChart(samples,id){
     // return reversedTopTen;
 }
 
+function plotGaugeChart(metadata,id){
+    var focusMetaData = filterRecords(metadata,id);
+    console.log(focusMetaData);
+    var wFreq = parseFloat(focusMetaData[0].wfreq);
+    console.log(`wFreq: ${wFreq}`);
+
+    // part of data to input
+    var trace1 = {
+        type: 'pie',
+        showlegend: false,
+        hole: 0.4,
+        rotation: 90,
+        values: [ 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81],
+        text: ['0-1','1-2','2-3','3-4','4-5','5-6','6-7','7-8','8-9'],
+        direction: 'clockwise',
+        textinfo: 'text',
+        textposition: 'inside',
+        marker: {
+          colors: ['','','','','','','','','','white'],
+          labels: ['0-1','1-2','2-3','3-4','4-5','5-6','6-7','7-8','8-9'],
+          hoverinfo: 'label'
+        }
+      }
+  
+      // needle
+      var degrees = 50, radius = .9
+      var radians = degrees * Math.PI / 180
+      var x = -1 * radius * Math.cos(radians) * wFreq
+      var y = radius * Math.sin(radians)
+  
+      var layout = {
+        shapes: [{
+          type: 'line',
+          x0: 0.5,
+          y0: 0.5,
+          x1: 0.6,
+          y1: 0.6,
+          line: {
+            color: 'black',
+            width: 4
+          }
+        }],
+        height: 600,
+        width: 600,
+        title: '<b>Belly Button Washing Frequency</b> <br> Scrubs per Week',
+        xaxis: {visible: false, range: [-1, 1]},
+        yaxis: {visible: false, range: [-1, 1]}
+      }
+  
+      var data = [trace1]
+  
+      Plotly.plot('gauge', data, layout)
+}
 var metadataObj = [];
 var samplesObj = [];
 
@@ -159,7 +217,7 @@ d3.json("data/samples.json").then((sampleData) => {
     //console.log(names);
     var metadata = data.metadata;
     metadata.forEach(obj => metadataObj.push(obj));
-     //console.log(metadataObj);
+     console.log(metadata.map(val => val.wfreq));
 
     var samples = data.samples;
     samples.forEach(obj => samplesObj.push(obj));
@@ -176,6 +234,7 @@ d3.json("data/samples.json").then((sampleData) => {
     plotBubbleChart(samples,940);
     //console.log(initMetadata);
 
+    plotGaugeChart(metadata,940);
 });
 //console.log(metadataObj);
 //console.log(samplesObj);
@@ -189,6 +248,7 @@ function optionChanged(id){
     buildDemoData(metadataObj,id),
     plotTopTen(samplesObj,id);
     plotBubbleChart(samplesObj,id);
+    plotGaugeChart(metadataObj,id);
 }
 
 
