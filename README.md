@@ -1,14 +1,17 @@
 # Interactive-Visualizations-and-Dashboard
 SMU Data Science Bootcamp D3 Javascript Visualization Homework
+# Interactive-Visualizations-and-Dashboard
+SMU Data Science Bootcamp D3 Javascript Visualization Homework
 # Plot.ly Homework - Belly Button Biodiversity
 
 ![Bacteria by filterforge.com](Images/bacteria.jpg)
 
-In this assignment, you will build an interactive dashboard to explore the [Belly Button Biodiversity dataset](http://robdunnlab.com/projects/belly-button-biodiversity/), which catalogs the microbes that colonize human navels.
+An interactive dashboard was built to explore the [Belly Button Biodiversity dataset](http://robdunnlab.com/projects/belly-button-biodiversity/), which catalogs the microbes that colonize human navels. The [Dashboard](https://kipmadden.github.io/Interactive-Visualizations-and-Dashboard/) html code can be viewed here: [index.html code](index.html) along with the javascript [app.js](static/js/app.js).
 
-The dataset reveals that a small handful of microbial species (also called operational taxonomic units, or OTUs, in the study) were present in more than 70% of people, while the rest were relatively rare.
+The [dataset](data/samples.json) reveals that a small handful of microbial species (also called operational taxonomic units, or OTUs, in the study) were present in more than 70% of people, while the rest were relatively rare.
 
-## Step 1: Plotly
+
+## Plotly used to create a Dashboard
 
 1. Use the D3 library to read in `samples.json`.
 
@@ -20,7 +23,7 @@ The dataset reveals that a small handful of microbial species (also called opera
 
 * Use `otu_labels` as the hovertext for the chart.
 
-  ![bar Chart](Images/hw01.png)
+  ![bar Chart](Images/toptenchart.jpg)
 
 3. Create a bubble chart that displays each sample.
 
@@ -34,7 +37,7 @@ The dataset reveals that a small handful of microbial species (also called opera
 
 * Use `otu_labels` for the text values.
 
-![Bubble Chart](Images/bubble_chart.png)
+![Bubble Chart](Images/bubble_chart.jpg)
 
 4. Display the sample metadata, i.e., an individual's demographic information.
 
@@ -44,32 +47,27 @@ The dataset reveals that a small handful of microbial species (also called opera
 
 6. Update all of the plots any time that a new sample is selected.
 
-Additionally, you are welcome to create any layout that you would like for your dashboard. An example dashboard is shown below:
+The Dashboard layout that was created is below:
 
-![hw](Images/hw02.png)
+[![hw](Images/Final_Dashboard.jpg)](https://kipmadden.github.io/Interactive-Visualizations-and-Dashboard/)
 
-## Advanced Challenge Assignment (Optional)
+## Gauge Chart
 
 The following task is advanced and therefore optional.
 
-* Adapt the Gauge Chart from <https://plot.ly/javascript/gauge-charts/> to plot the weekly washing frequency of the individual.
+* The Gauge Chart from <https://plot.ly/javascript/gauge-charts/> was adapted to plot the weekly washing frequency of the individual.
 
-* You will need to modify the example gauge code to account for values ranging from 0 through 9.
 
-* Update the chart whenever a new sample is selected.
-
-![Weekly Washing Frequency Gauge](Images/gauge.png)
+[![gauge_chart](Images/gauge_chart.jpg)](https://kipmadden.github.io/Interactive-Visualizations-and-Dashboard/)
 
 ## Deployment
 
-Deploy your app to a free static page hosting service, such as GitHub Pages. Submit the links to your deployment and your GitHub repo.
+The Dashboard was deployed on GitHub Pages and can be found here: [index.html](https://kipmadden.github.io/Interactive-Visualizations-and-Dashboard/) and the html file can be view here: [index.html code](index.html)
 
-## Hints
 
-* Use `console.log` inside of your JavaScript code to see what your data looks like at each step.
-
-* Refer to the [Plotly.js documentation](https://plot.ly/javascript/) when building the plots.
 
 ### About the Data
+
+The dataset used can be view here: [JSON dataset](data/samples.json)
 
 Hulcr, J. et al.(2012) _A Jungle in There: Bacteria in Belly Buttons are Highly Diverse, but Predictable_. Retrieved from: [http://robdunnlab.com/projects/belly-button-biodiversity/results-and-data/](http://robdunnlab.com/projects/belly-button-biodiversity/results-and-data/)
